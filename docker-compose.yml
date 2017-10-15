@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # app:
+  #   build: .
+  #   container_name: go_app
+  #   environment:
+  #     DB_HOST: postgres
+  #     DB_PORT: 5432
+  #     DB_USER: postgres
+  #     DB_PASSWORD: postgres
+  #     DB_NAME: app_db
+  #     DB_SSL_MODE: disable
+  #     TYPESENSE_HOST: typesense
+  #     TYPESENSE_PORT: 8108
+  #     TYPESENSE_API_KEY: xyz
+  #     SERVER_PORT: 8080
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - postgres
+  #     - typesense
+  #   networks:
+  #     - app_network
+  #
+  # postgres:
+  #   image: postgres:16
+  #   container_name: postgres_db
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #     POSTGRES_DB: app_db
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - app_network
+
+  typesense:
+    image: typesense/typesense:0.25.2
+    container_name: typesense_search
+    environment:
+      TYPESENSE_DATA_DIR: /data
+      TYPESENSE_API_KEY: xyz
+    ports:
+      - "8108:8108"
+    volumes:
+      - typesense_data:/data
+    command: '--data-dir /data --api-key=xyz --listen-port 8108 --enable-cors'
+
+volumes:
+  typesense_data:
+

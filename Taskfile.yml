@@ -1,0 +1,48 @@
+version: '3'
+
+vars:
+  APP_NAME: go-typesense-app
+  DOCKER_COMPOSE_FILE: docker-compose.yml
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+
+  deps:
+    desc: Download Go dependencies
+    cmds:
+      - go mod download
+      - go mod tidy
+
+  dev:
+    deps: [deps]
+    desc: Run the application in development mode with live reload
+    cmds:
+      - go run ./cmd/server/main.go
+
+  dcd:
+    desc: Stop all services
+    cmds:
+      - docker-compose down
+
+  up:
+    deps: [dcd]
+    desc: Start all services with Docker Compose
+    cmds:
+      - docker-compose up --build
+
+  dir-backup:
+    desc: Create a backup of the current directory
+    cmds:
+      - mkdir -p ./backups
+
+  backup-tss:
+    deps: [dir-backup]
+    desc: Create Typesense backup inside container and copy to host
+    cmds:
+      - docker exec typesense_search tar -czf /tmp/typesense_backup-$(date +%d-%m-%Y).tar.gz -C /data .
+      - docker cp typesense_search:/tmp/typesense_backup-$(date +%d-%m-%Y).tar.gz ./backups/
+      - docker exec typesense_search rm /tmp/typesense_backup-$(date +%d-%m-%Y).tar.gz
+      - echo "Backup copied to ./backups/ directory"

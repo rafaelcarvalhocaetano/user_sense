@@ -1,0 +1,142 @@
+### Variables
+@baseUrl = http://localhost:8080/api/v1
+@userCreateBody = {
+  "name": "João Silva",
+  "email": "joao.silva@example.com",
+  "phone": "+55 11 99999-9999",
+  "age": 30,
+  "city": "São Paulo"
+}
+
+###
+### USER ENDPOINTS
+###
+
+### Create User
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "João Silva",
+  "email": "joao.silva@example.com",
+  "phone": "+55 11 99999-9999",
+  "city": "São Paulo"
+}
+
+### Create Another User
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Maria Santos",
+  "email": "maria.santos@example.com",
+  "phone": "+55 11 88888-8888",
+  "city": "Rio de Janeiro"
+}
+
+### Create Third User
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Pedro Costa",
+  "email": "pedro.costa@example.com",
+  "phone": "+55 11 77777-7777",
+  "city": "Belo Horizonte"
+}
+
+### Get All Users
+GET {{baseUrl}}/users
+
+### Get User by ID (replace {id} with actual user UUID)
+GET {{baseUrl}}/users/6c07c9a4-e0e4-4cde-9623-6ecac420e3fd
+# Note: Replace with actual UUID returned from create user response
+
+### Update User (replace {id} with actual user UUID)
+PUT {{baseUrl}}/users/6c07c9a4-e0e4-4cde-9623-6ecac420e3fd
+Content-Type: application/json
+
+{
+  "name": "João Silva Updated",
+  "email": "joao.silva.updated@example.com",
+  "phone": "+55 11 99999-0000",
+  "city": "São Paulo"
+}
+
+### Delete User (replace {id} with actual user UUID)
+#DELETE {{baseUrl}}/users/550e8400-e29b-41d4-a716-446655440000
+
+###
+### SEARCH ENDPOINTS
+###
+
+### Search Users by Name
+POST {{baseUrl}}/search/users
+Content-Type: application/json
+
+{
+  "query": "João"
+}
+
+### Search Users by Email
+POST {{baseUrl}}/search/users
+Content-Type: application/json
+
+{
+  "query": "maria.santos"
+}
+
+### Search Users by City
+POST {{baseUrl}}/search/users
+Content-Type: application/json
+
+{
+  "query": "São Paulo"
+}
+
+### Search Users with Multiple Terms
+POST {{baseUrl}}/search/users
+Content-Type: application/json
+
+{
+  "query": "João Silva"
+}
+
+### Search Users - Empty Query (should return error)
+POST {{baseUrl}}/search/users
+Content-Type: application/json
+
+{
+  "query": ""
+}
+
+###
+### TYPESENSE SNAPSHOT ENDPOINTS
+###
+
+### Create Snapshot
+POST {{baseUrl}}/snapshots
+Content-Type: application/json
+
+### Get All Snapshots
+GET {{baseUrl}}/snapshots
+
+### Restore Snapshot
+POST {{baseUrl}}/snapshots/snapshot_1/restore
+Content-Type: application/json
+
+### Delete Snapshot
+DELETE {{baseUrl}}/snapshots/snapshot_1
+
+
+###
+### SEARCH CARAIO
+###
+
+### Search All Test Users
+POST {{baseUrl}}/search/users
+Content-Type: application/json
+
+{
+  "query": "11"
+}
