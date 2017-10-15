@@ -1,0 +1,10 @@
+version: "tres"
+
+services:
+  sqlc:
+    image: sqlc/sqlc
+    container_name: sqlc
+
+  migration:
+    image: migrate/migrate
+    container_name: migrate
