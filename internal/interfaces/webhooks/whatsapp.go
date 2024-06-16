@@ -41,6 +41,8 @@ func (wt *WhatsApp) messages(w http.ResponseWriter, r *http.Request, dataChan ch
 		_, _ = w.Write([]byte(err.Error()))
 		return
 	}
+
+	//_, _ = pp.Println(input)
 	go func() {
 		dataChan <- input
 	}()

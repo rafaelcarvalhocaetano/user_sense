@@ -3,22 +3,18 @@ package usecase
 import (
 	"botwhatsapp/internal/app/xodo/dto"
 	"botwhatsapp/internal/interfaces/services"
-	"botwhatsapp/internal/interfaces/webhooks/model"
 )
 
-type objectData map[string]interface{}
-
-type Rate struct {
+type Marketing struct {
 	gateway services.WTAGateway
-	x       chan model.Channel
 }
 
-func NewRate(gateway services.WTAGateway, x chan model.Channel) *Rate {
-	return &Rate{gateway: gateway, x: x}
+func NewMarketing(gateway services.WTAGateway) *Marketing {
+	return &Marketing{gateway: gateway}
 }
 
-func (r *Rate) Rate(input dto.InputRate) (*string, error) {
-	var imageUrl = "https://github.com/rafaelcarvalhocaetano/meetup/blob/master/aval.png?raw=true"
+func (r *Marketing) Mkt(input dto.InputRate) (*string, error) {
+	var imageUrl = "https://github.com/rafaelcarvalhocaetano/meetup/blob/master/seja.png?raw=true"
 
 	templatePayload := objectData{
 		"messaging_product": "whatsapp",
@@ -26,7 +22,7 @@ func (r *Rate) Rate(input dto.InputRate) (*string, error) {
 		"to":                input.PhoneNumber,
 		"type":              "template",
 		"template": objectData{
-			"name":     "xodo_flow",
+			"name":     "xodo_propaganda",
 			"language": map[string]string{"code": "pt_BR"},
 			"components": []objectData{
 				{
@@ -47,11 +43,6 @@ func (r *Rate) Rate(input dto.InputRate) (*string, error) {
 	respID, err := r.gateway.Send("messages", templatePayload)
 	if err != nil {
 		return nil, err
-	}
-
-	r.x <- model.Channel{
-		PhoneNumber: input.PhoneNumber,
-		Status:      true,
 	}
 
 	return respID, nil

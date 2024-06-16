@@ -37,6 +37,7 @@ func main() {
 	channelManager := make(chan *model.WebhookData)
 	dispather := make(chan *channel.UserData)
 	templateChannel := make(chan model.Status)
+	statusChannel := make(chan model.Channel)
 
 	// TODO: service httpClient
 	sendMessages := whatsapp.NewSendMessage(logDriver)
@@ -52,15 +53,14 @@ func main() {
 	}
 
 	// TODO: Xodo
-	xd := xodo.New().Main(httpGatway)
+	xd := xodo.New().Main(httpGatway, statusChannel)
 	http.NewXodoHttp(logDriver, *xd).Handlers(r)
 
 	// TODO: webhooks
 	webhooks.NewWhatsApp(logDriver, httpGatway).Handler(r, channelManager)
-
 	channel.NewMessageChannel().Main(channelManager, dispather, templateChannel)
 
-	channel.NewChannelFlowXodo(*xd).ChannelFlowXodo(dispather, templateChannel)
+	channel.NewChannelFlowXodo(*xd).ChannelFlowXodo(dispather, templateChannel, statusChannel)
 	//channel.NewChannelStatusMessage().ChannelStatusMessage(templateChannel)
 
 	// TODO: web-server

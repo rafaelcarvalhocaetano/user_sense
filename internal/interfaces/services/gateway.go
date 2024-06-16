@@ -1,7 +1,7 @@
 package services
 
 type SendMessagesHttp interface {
-	Send(p string, data any) (map[string]any, error)
+	Send(p string, data any) (*string, error)
 }
 
 type RegisterHttp interface {

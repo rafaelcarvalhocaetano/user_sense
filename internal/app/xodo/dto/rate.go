@@ -1,5 +1,5 @@
 package dto
 
-type Input struct {
+type InputRate struct {
 	PhoneNumber string `json:"phone_number"`
 }

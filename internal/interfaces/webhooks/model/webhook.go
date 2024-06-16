@@ -38,6 +38,11 @@ type Status struct {
 	Pricing      *Pricing      `json:"pricing,omitempty"`
 }
 
+type Channel struct {
+	PhoneNumber string `json:"id"`
+	Status      bool   `json:"status"`
+}
+
 type Metadata struct {
 	DisplayPhoneNumber   *string   `json:"display_phone_number,omitempty"`
 	PhoneNumberID        *string   `json:"phone_number_id,omitempty,omitempty"`

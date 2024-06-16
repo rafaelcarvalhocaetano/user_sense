@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/joho/godotenv/autoload"
+	"github.com/k0kubun/pp/v3"
 	"io"
 	"net/http"
 	"os"
@@ -30,7 +31,7 @@ func NewSendMessage(l ports.Logger) *SendMessage {
 	}
 }
 
-func (meta *SendMessage) Send(p string, data any) (map[string]any, error) {
+func (meta *SendMessage) Send(p string, data any) (*string, error) {
 	jsonValue, err := json.Marshal(data)
 	if err != nil {
 		meta.logger.Error("dispatcher", data, http.StatusBadRequest)
@@ -80,5 +81,29 @@ func (meta *SendMessage) Send(p string, data any) (map[string]any, error) {
 
 	payload["data"] = response
 	meta.logger.Debug("dispatcher", payload, http.StatusBadRequest)
-	return response, nil
+	fmt.Println("\n\n response: ", response)
+
+	_, _ = pp.Println(response)
+	id, _ := extractID(response)
+
+	return &id, nil
+}
+
+func extractID(data map[string]interface{}) (string, error) {
+	messages, ok := data["messages"].([]interface{})
+	if !ok || len(messages) == 0 {
+		return "", fmt.Errorf("messages array not found or empty")
+	}
+
+	message, ok := messages[0].(map[string]interface{})
+	if !ok {
+		return "", fmt.Errorf("unable to parse message object")
+	}
+
+	id, ok := message["id"].(string)
+	if !ok {
+		return "", fmt.Errorf("message ID not found or not a string")
+	}
+
+	return id, nil
 }

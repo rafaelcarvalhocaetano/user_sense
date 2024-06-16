@@ -31,7 +31,6 @@ func (cm *MessageChannel) Main(webhook <-chan *model.WebhookData, send chan<- *U
 			dataChannel := &UserData{UserPhone: *phone, MetaID: entry.ID}
 
 			wg.Add(1)
-			//go cm.processChange(*change, dataChannel, send, &wg)
 			go func() {
 				defer wg.Done()
 
@@ -46,7 +45,6 @@ func (cm *MessageChannel) Main(webhook <-chan *model.WebhookData, send chan<- *U
 
 				if len(statuses) > 0 {
 					// TODO: bloco de codigo sobre o status dos templates
-					//dataChannel.FlowIndex[*phone] = 1
 					templateStatus <- *statuses[0]
 					return
 				}
@@ -75,43 +73,6 @@ func (cm *MessageChannel) Main(webhook <-chan *model.WebhookData, send chan<- *U
 		//close(send)
 	}()
 }
-
-//func (cm *MessageChannel) processChange(change model.Change, dataChannel *UserData, send chan<- *UserData, wg *sync.WaitGroup) {
-//	defer wg.Done()
-//
-//	statuses := change.Value.Statuses
-//	contacts := change.Value.Contacts
-//	messages := change.Value.Messages
-//
-//	if len(contacts) > 0 {
-//		profile := contacts[0].Profile
-//		dataChannel.UserName = profile.Name
-//	}
-//
-//	if len(statuses) > 0 {
-//		// TODO: bloco de codigo sobre o status dos templates
-//		return
-//	}
-//
-//	if len(messages) > 0 {
-//		message := change.Value.Messages[0]
-//		switch message.Type {
-//		case "text":
-//			dataChannel.Payload = message.Text.Body
-//		case "button":
-//			if message.Button.Payload != nil {
-//				dataChannel.Payload = *message.Button.Payload
-//			}
-//		case "interactive":
-//			interactive := message.Interactive
-//			if interactive != nil && interactive.Type == "button_reply" {
-//				dataChannel.Payload = interactive.ButtonReply.ID
-//			}
-//		}
-//	}
-//
-//	send <- dataChannel
-//}
 
 func (cm *MessageChannel) userPhoneNumber(webmessage model.Change) *string {
 	var userPhone string

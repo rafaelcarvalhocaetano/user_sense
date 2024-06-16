@@ -1,34 +1,21 @@
-package dojo
+package usecase
 
 import (
+	"botwhatsapp/internal/app/xodo/dto"
 	"botwhatsapp/internal/interfaces/services"
 	"errors"
 	"fmt"
 )
 
-type SendSimpleMessage struct {
-	dispatch services.WTAGateway
+type Message struct {
+	http services.WTAGateway
 }
 
-type outputSendSimpleMessage struct {
-	Message string `json:"body"`
+func NewMessage(http services.WTAGateway) *Message {
+	return &Message{http: http}
 }
 
-type InputSendSimpleMessage struct {
-	To            string  `json:"to"`
-	Message       string  `json:"message"`
-	Type          *string `json:"type,omitempty"`
-	ContactNumber *string `json:"contact_number,omitempty"`
-	ContactName   *string `json:"contact_name,omitempty"`
-	Caption       *string `json:"caption,omitempty"`
-	MID           *string `json:"mid,omitempty"`
-}
-
-func NewSendSimpleMessage(d services.WTAGateway) *SendSimpleMessage {
-	return &SendSimpleMessage{dispatch: d}
-}
-
-func (sm *SendSimpleMessage) SendSimpleMessage(data *InputSendSimpleMessage) (*outputSendSimpleMessage, error) {
+func (msg *Message) SendMessage(data *dto.InputMessage) (*dto.OutputMessage, error) {
 	if data.To == "" || len(data.To) != 13 {
 		return nil, errors.New("invalid parameter")
 	}
@@ -38,7 +25,7 @@ func (sm *SendSimpleMessage) SendSimpleMessage(data *InputSendSimpleMessage) (*o
 		"to":                data.To,
 	}
 
-	if *data.Type == "document" {
+	if data.Type == "document" {
 		payload["type"] = "document"
 		payload["document"] = map[string]interface{}{
 			"caption": data.Caption,
@@ -46,7 +33,7 @@ func (sm *SendSimpleMessage) SendSimpleMessage(data *InputSendSimpleMessage) (*o
 		}
 	}
 
-	if *data.Type == "image" {
+	if data.Type == "image" {
 		payload["type"] = "image"
 		payload["image"] = map[string]interface{}{
 			"preview_url": true,
@@ -54,7 +41,7 @@ func (sm *SendSimpleMessage) SendSimpleMessage(data *InputSendSimpleMessage) (*o
 		}
 	}
 
-	if data.Type == nil || *data.Type == "text" {
+	if data.Type == "" || data.Type == "text" {
 		payload["type"] = "text"
 		//payload["context"] = map[string]any{
 		//	"message_id": data.MID,
@@ -65,7 +52,7 @@ func (sm *SendSimpleMessage) SendSimpleMessage(data *InputSendSimpleMessage) (*o
 		}
 	}
 
-	if *data.Type == "contact" {
+	if data.Type == "contact" {
 		payload["type"] = "contacts"
 		payload["contacts"] = []map[string]interface{}{
 			{
@@ -85,11 +72,11 @@ func (sm *SendSimpleMessage) SendSimpleMessage(data *InputSendSimpleMessage) (*o
 		}
 	}
 
-	_, err := sm.dispatch.Send("messages", payload)
+	_, err := msg.http.Send("messages", payload)
 	if err != nil {
 		return nil, errors.New("failed to send message")
 	}
 
-	msg := fmt.Sprintf("message dispatch to %v", &data.To)
-	return &outputSendSimpleMessage{Message: msg}, nil
+	msgTxt := fmt.Sprintf("message dispatch to %v", &data.To)
+	return &dto.OutputMessage{Message: msgTxt}, nil
 }
