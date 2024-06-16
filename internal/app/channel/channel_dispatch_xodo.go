@@ -17,7 +17,7 @@ func NewChannelFlowXodo(gate xodo2.Gateway) *ChannelFlowXodo {
 	return &ChannelFlowXodo{xodo: gate}
 }
 
-var aval = "https://github.com/rafaelcarvalhocaetano/meetup/blob/master/avaliacao.png?raw=true"
+var aval = "https://github.com/rafaelcarvalhocaetano/wa_xodo/blob/master/assets/aval.jpeg?raw=true"
 var membro = "https://github.com/rafaelcarvalhocaetano/meetup/blob/master/membro.png?raw=true"
 var xodo = "https://media.licdn.com/dms/image/D4D0BAQEe8aamu2cmTg/company-logo_200_200/0/1711134503656/xodoapp_logo?e=2147483647&v=beta&t=wWm6gg64bolgEo6jFctyn2gdt9jzjiPFVHotyS0fzTk"
 
