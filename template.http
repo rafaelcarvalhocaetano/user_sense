@@ -1,44 +1,40 @@
 
 ## Create Template
-POST http://localhost:3000/api/v1/dojo/template
+POST https://graph.facebook.com/v19.0/110880075418235/message_templates
 Content-Type: application/json
-Authorization: "Bearer EAAV2kUE4Mf8BO5YinQFIHE5ccD44wjwyCFtmYNEcjPLERKCoW9D7goy6PXmo24Tq8o9LjX2CF3vK2fv8P3oyKrmgtx7eZCa3uOAl5VSkovJZAkqtjwsKhDZAMz8C5lI6ZALBuE6cHqDAFU8WxtUZBKrTFXSXRC6i4qJNa3423z7GGQSBmo13snV4RJGCioxEdZBwsnxdktmf8uW6jFFz9Dn3CA5NRXWUpj788ZD"
+Authorization: "Bearer EAAV2kUE4Mf8BO7cFhC01ILVNvcz3Itdc0aHPnpxWD7xZCrAZCrjStdTGQAxU3G31sfrPBRN7Hg58iNBV4Q4tUoZB8kE0BQSVJZAqdg7S1vso90FgFwkgRWNqaa8mIQmZAwnEn0INZAl3ZCpbSVOUejYzbzzu996ZBvulfruerSJLMSv0ZCvZAXZAu0i4lEPmZCDA2dB5yb0eSLwL7X2i8k7ZB1kzMRV91ZC8kSYHuEkwDq"
 
 {
-  "name": "000xodo_data",
-  "language": "pt_BR",
-  "category": "marketing",
-  "component": {
-		"header":  {
-      "type": "HEADER",
-      "format": "text",
-			"text": "Ola, {{1}}",
-			"example": {
-        "header_text": ["usuario"]
-      }
-    },
-		"body": {
-      "type": "body",
-		 	"text": "Chegou a hora de resgatar seu aditivo do STP Club.\n\nVá até o seu posto, clique no link abaixo e apresente o QRCode ao frentista."
-    },
-		"footer": {
-			"type": "footer",
-			"text": "XodoIAG"
-		},
-    "buttons": {
-      "type": "buttons",
-      "buttons": [
-				 {
-          "type": "QUICK_REPLY",
-          "text": "Gostei",
-					"payload": "33333"
+    "name": "intro_catalog_offer",
+    "language": "en_US",
+    "category": "MARKETING",
+    "components": [
+        {
+            "type": "BODY",
+            "text": "Now shop for your favourite products right here on WhatsApp! Get Rs {{1}} off on all orders above {{2}}Rs! Valid for your first {{3}} orders placed on WhatsApp!",
+            "example": {
+                "body_text": [
+                    [
+                        "100",
+                        "400",
+                        "3"
+                    ]
+                ]
+            }
         },
         {
-          "type":"QUICK_REPLY",
-          "text": "Não Gostei",
-					"payload": "123"
+            "type": "FOOTER",
+            "text": "Best grocery deals on WhatsApp!"
+        },
+        {
+            "type": "BUTTONS",
+            "buttons": [
+                {
+                    "type": "CATALOG",
+                    "text": "View catalog"
+                }
+            ]
         }
-      ]
-    }
-	}
+    ]
 }
+

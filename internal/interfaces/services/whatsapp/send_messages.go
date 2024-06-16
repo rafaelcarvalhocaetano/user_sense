@@ -41,8 +41,6 @@ func (meta *SendMessage) Send(p string, data any) (map[string]any, error) {
 		"path": p,
 	}
 
-	fmt.Println("\n\n data: ", string(jsonValue))
-
 	path := fmt.Sprintf("%s/%v/%v", meta.url, meta.phoneID, p)
 	req, err := http.NewRequest("POST", path, bytes.NewReader(jsonValue))
 	if err != nil {

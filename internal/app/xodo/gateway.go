@@ -1,7 +1,9 @@
 package xodo
 
+import "botwhatsapp/internal/app/xodo/dto"
+
 type RateGateway interface {
-	Rate() (any, error)
+	Rate(input dto.Input) (any, error)
 }
 
 type Gateway struct {

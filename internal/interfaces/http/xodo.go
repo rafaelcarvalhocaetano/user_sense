@@ -2,6 +2,7 @@ package http
 
 import (
 	"botwhatsapp/internal/app/xodo"
+	"botwhatsapp/internal/app/xodo/dto"
 	"botwhatsapp/internal/infra/ports"
 	"botwhatsapp/internal/pkg/response"
 	"botwhatsapp/util"
@@ -24,14 +25,13 @@ func NewXodoHttp(l ports.Logger, gateway xodo.Gateway) *XodoHttp {
 }
 
 func (ctl *XodoHttp) rateHandler(w http.ResponseWriter, r *http.Request) {
-	//input, err := util.ToStruct[](r.Body)
-	input, err := util.ToStruct[any](r.Body)
+	input, err := util.ToStruct[dto.Input](r.Body)
 	if err != nil {
 		ctl.output.Error(input, err.Error(), w)
 		return
 	}
 
-	output, err := ctl.gateway.Rate()
+	output, err := ctl.gateway.Rate(*input)
 	if err != nil {
 		ctl.output.Error(input, err.Error(), w)
 		return
