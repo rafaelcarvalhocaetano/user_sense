@@ -9,11 +9,11 @@ import (
 type objectData map[string]interface{}
 
 type Rate struct {
-	gateway services.WTAGateway
+	gateway services.WAGateway
 	x       chan model.Channel
 }
 
-func NewRate(gateway services.WTAGateway, x chan model.Channel) *Rate {
+func NewRate(gateway services.WAGateway, x chan model.Channel) *Rate {
 	return &Rate{gateway: gateway, x: x}
 }
 

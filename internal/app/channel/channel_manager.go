@@ -1,6 +1,7 @@
 package channel
 
 import (
+	"botwhatsapp/internal/app/channel/dto"
 	"sync"
 
 	"botwhatsapp/internal/interfaces/webhooks/model"
@@ -12,7 +13,7 @@ func NewMessageChannel() *MessageChannel {
 	return &MessageChannel{}
 }
 
-func (cm *MessageChannel) Main(webhook <-chan *model.WebhookData, send chan<- *UserData, templateStatus chan<- model.Status) {
+func (cm *MessageChannel) Main(webhook <-chan *model.WebhookData, send chan<- *dto.ChannelDTO, templateStatus chan<- model.Status) {
 	var wg sync.WaitGroup
 
 	go func() {
@@ -28,7 +29,8 @@ func (cm *MessageChannel) Main(webhook <-chan *model.WebhookData, send chan<- *U
 
 			change := entry.Changes[0]
 			phone := cm.userPhoneNumber(*change)
-			dataChannel := &UserData{UserPhone: *phone, MetaID: entry.ID}
+			//dataChannel := &ChannelDTO{UserPhone: *phone, MetaID: entry.ID}
+			dataChannel := &dto.ChannelDTO{UserPhone: *phone}
 
 			wg.Add(1)
 			go func() {

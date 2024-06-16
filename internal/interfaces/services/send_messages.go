@@ -1,4 +1,4 @@
-package whatsapp
+package services
 
 import (
 	"botwhatsapp/internal/infra/ports"
@@ -37,6 +37,8 @@ func (meta *SendMessage) Send(p string, data any) (*string, error) {
 		meta.logger.Error("dispatcher", data, http.StatusBadRequest)
 		return nil, err
 	}
+
+	fmt.Println("json: ", string(jsonValue))
 	payload := map[string]interface{}{
 		"data": jsonValue,
 		"path": p,

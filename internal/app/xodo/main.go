@@ -12,7 +12,7 @@ func New() *MainXodo {
 	return &MainXodo{}
 }
 
-func (*MainXodo) Main(http services.WTAGateway, cc chan model.Channel) *Gateway {
+func (*MainXodo) Main(http services.WAGateway, cc chan model.Channel) *Gateway {
 	rate := usecase.NewRate(http, cc)
 	message := usecase.NewMessage(http)
 	mkt := usecase.NewMarketing(http)

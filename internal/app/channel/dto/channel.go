@@ -1,8 +1,8 @@
-package channel
+package dto
 
 import "botwhatsapp/internal/interfaces/webhooks/model"
 
-type UserData struct {
+type ChannelDTO struct {
 	UserPhone string
 	UserName  string
 	Payload   string

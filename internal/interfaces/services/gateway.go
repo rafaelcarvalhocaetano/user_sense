@@ -4,21 +4,6 @@ type SendMessagesHttp interface {
 	Send(p string, data any) (*string, error)
 }
 
-type RegisterHttp interface {
-	Register(path string, data any) (map[string]any, error)
-}
-
-type GetTemplateGateway interface {
-	GetDataModel(p string, data map[string]string) (map[string]any, error)
-}
-
-type DeleteTemplateGateway interface {
-	DeleteTemplate(name string) error
-}
-
-type WTAGateway struct {
+type WAGateway struct {
 	SendMessagesHttp
-	RegisterHttp
-	GetTemplateGateway
-	DeleteTemplateGateway
 }

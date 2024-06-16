@@ -1,9 +1,9 @@
 package main
 
 import (
+	"botwhatsapp/internal/app/channel/dto"
 	"botwhatsapp/internal/app/xodo"
 	"botwhatsapp/internal/interfaces/http"
-	"botwhatsapp/internal/interfaces/services/whatsapp"
 	"botwhatsapp/internal/interfaces/web"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
@@ -34,34 +34,25 @@ func main() {
 		AllowedHeaders: []string{"Accept", "Content-Type"},
 	}))
 
-	channelManager := make(chan *model.WebhookData)
-	dispather := make(chan *channel.UserData)
-	templateChannel := make(chan model.Status)
-	statusChannel := make(chan model.Channel)
+	webhookChannel := make(chan *model.WebhookData)
+	messageChannel := make(chan *dto.ChannelDTO)
+	statusesChannel := make(chan model.Status)
+	sendChannel := make(chan model.Channel)
 
 	// TODO: service httpClient
-	sendMessages := whatsapp.NewSendMessage(logDriver)
-	templates := whatsapp.NewTemplateService(logDriver)
-	register := whatsapp.NewRegisteTemplateHttp(logDriver)
-	deleteTemplate := whatsapp.NewDeleteTemplateHttp(logDriver)
+	sendMessages := services.NewSendMessage(logDriver)
 
-	httpGatway := services.WTAGateway{
-		SendMessagesHttp:      sendMessages,
-		RegisterHttp:          register,
-		GetTemplateGateway:    templates,
-		DeleteTemplateGateway: deleteTemplate,
-	}
+	httpGatway := services.WAGateway{SendMessagesHttp: sendMessages}
 
 	// TODO: Xodo
-	xd := xodo.New().Main(httpGatway, statusChannel)
+	xd := xodo.New().Main(httpGatway, sendChannel)
 	http.NewXodoHttp(logDriver, *xd).Handlers(r)
 
 	// TODO: webhooks
-	webhooks.NewWhatsApp(logDriver, httpGatway).Handler(r, channelManager)
-	channel.NewMessageChannel().Main(channelManager, dispather, templateChannel)
+	webhooks.NewWhatsapp(logDriver, httpGatway).Handler(r, webhookChannel)
+	channel.NewMessageChannel().Main(webhookChannel, messageChannel, statusesChannel)
 
-	channel.NewChannelFlowXodo(*xd).ChannelFlowXodo(dispather, templateChannel, statusChannel)
-	//channel.NewChannelStatusMessage().ChannelStatusMessage(templateChannel)
+	channel.NewChannelMkt(*xd).Flow(messageChannel, statusesChannel, sendChannel)
 
 	// TODO: web-server
 	web.NewServer(r)

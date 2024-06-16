@@ -6,10 +6,10 @@ import (
 )
 
 type Marketing struct {
-	gateway services.WTAGateway
+	gateway services.WAGateway
 }
 
-func NewMarketing(gateway services.WTAGateway) *Marketing {
+func NewMarketing(gateway services.WAGateway) *Marketing {
 	return &Marketing{gateway: gateway}
 }
 

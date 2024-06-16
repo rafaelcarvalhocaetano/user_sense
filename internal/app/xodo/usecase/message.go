@@ -8,10 +8,10 @@ import (
 )
 
 type Message struct {
-	http services.WTAGateway
+	http services.WAGateway
 }
 
-func NewMessage(http services.WTAGateway) *Message {
+func NewMessage(http services.WAGateway) *Message {
 	return &Message{http: http}
 }
 
@@ -29,23 +29,21 @@ func (msg *Message) SendMessage(data *dto.InputMessage) (*dto.OutputMessage, err
 		payload["type"] = "document"
 		payload["document"] = map[string]interface{}{
 			"caption": data.Caption,
-			"link":    data.Message,
+			"link":    data.Link,
 		}
 	}
 
 	if data.Type == "image" {
 		payload["type"] = "image"
+		payload["preview_url"] = true
 		payload["image"] = map[string]interface{}{
-			"preview_url": true,
-			"body":        data.Message,
+			"link":    data.Link,
+			"caption": data.Caption,
 		}
 	}
 
 	if data.Type == "" || data.Type == "text" {
 		payload["type"] = "text"
-		//payload["context"] = map[string]any{
-		//	"message_id": data.MID,
-		//}
 		payload["text"] = map[string]interface{}{
 			"preview_url": true,
 			"body":        data.Message,

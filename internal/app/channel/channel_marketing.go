@@ -1,27 +1,25 @@
 package channel
 
 import (
+	dto2 "botwhatsapp/internal/app/channel/dto"
 	xodo2 "botwhatsapp/internal/app/xodo"
 	"botwhatsapp/internal/app/xodo/dto"
 	"botwhatsapp/internal/interfaces/webhooks/model"
 	"os"
 	"strconv"
 	"sync"
+	"time"
 )
 
-type ChannelFlowXodo struct {
+type ChannelMkt struct {
 	xodo xodo2.Gateway
 }
 
-func NewChannelFlowXodo(gate xodo2.Gateway) *ChannelFlowXodo {
-	return &ChannelFlowXodo{xodo: gate}
+func NewChannelMkt(gate xodo2.Gateway) *ChannelMkt {
+	return &ChannelMkt{xodo: gate}
 }
 
-func (cx *ChannelFlowXodo) ChannelFlowXodo(
-	userData <-chan *UserData,
-	statuses <-chan model.Status,
-	broker <-chan model.Channel,
-) {
+func (cx *ChannelMkt) Flow(messages <-chan *dto2.ChannelDTO, statuses <-chan model.Status, broker <-chan model.Channel) {
 	var wg sync.WaitGroup
 	wg.Add(1)
 
@@ -40,40 +38,38 @@ func (cx *ChannelFlowXodo) ChannelFlowXodo(
 	go func() {
 		defer wg.Done()
 		for b := range broker {
-			processMap[b.PhoneNumber] = map[string]string{"step": "continue"}
+			if b.Status {
+				processMap[b.PhoneNumber] = map[string]string{"step": "continue"}
+			}
 		}
 	}()
 
 	go func() {
 		defer wg.Done()
-		for user := range userData {
+		for m := range messages {
 
-			processor, ok := processMap[user.UserPhone]
+			processor, ok := processMap[m.UserPhone]
 			if processor["step"] == "stop" || !ok {
 				simpleMessage := dto.InputMessage{
-					To:            user.UserPhone,
+					To:            m.UserPhone,
 					Type:          "contact",
 					ContactNumber: "556281680703",
 					ContactName:   "STP CLUB",
 				}
-				cx.sendSimpleMessage(user.UserPhone, "Converse com nosso suporte, pelo contato: ")
+				cx.messageTxt(m.UserPhone, "Converse com nosso suporte, pelo contato: ")
 				_, _ = cx.xodo.SendMessage(&simpleMessage)
 			}
 
 			if processor["step"] == "continue" {
-				switch user.Payload {
+				switch m.Payload {
 				case "1", "2", "3", "4", "5":
-					msg := "Obrigado por nos avaliar! Visite-nos novamente em: \n\nhttps://www.instagram.com/reel/C4tBLGeuON2/?igsh=YW5ta3MxMDFjczF1\n\nSe preferir, entre em contato com nosso suporte:"
-					cx.sendSimpleMessage(user.UserPhone, msg)
-					//go func() {
-					//	input := dto.InputRate{PhoneNumber: user.UserPhone}
-					//	_, _ = cx.xodo.Mkt(input)
-					//	processor["step"] = "stop"
-					//}()
-					cx.Suport(user.UserPhone)
+					cx.messageEnded(m.UserPhone)
+					time.Sleep(time.Second * 1)
+					cx.suport(m.UserPhone)
+					processor["step"] = "stop"
 					continue
 				default:
-					cx.sendSimpleMessage(user.UserPhone, "Desculpe, não conseguimos entender. Por favor, classifique de 1 a 5.")
+					cx.messageTxt(m.UserPhone, "Desculpe, não conseguimos entender. Por favor, classifique de 1 a 5.")
 				}
 			}
 
@@ -82,7 +78,21 @@ func (cx *ChannelFlowXodo) ChannelFlowXodo(
 	go func() { wg.Wait() }()
 }
 
-func (cx *ChannelFlowXodo) Suport(p string) {
+func (cx *ChannelMkt) messageEnded(p string) {
+	image := "https://github.com/rafaelcarvalhocaetano/meetup/blob/master/seja.png?raw=true"
+	insta := "https://www.instagram.com/reel/C4tBLGeuON2/?igsh=YW5ta3MxMDFjczF1"
+	suport := "\n\nSe preferir, entre em contato com nosso suporte:"
+	msg := "Obrigado por nos avaliar! Visite-nos novamente em:\n\n " + insta + suport
+	simpleMessage := dto.InputMessage{
+		To:      p,
+		Type:    "image",
+		Link:    image,
+		Caption: msg,
+	}
+	_, _ = cx.xodo.SendMessage(&simpleMessage)
+}
+
+func (cx *ChannelMkt) suport(p string) {
 	simpleMessage := dto.InputMessage{
 		To:            p,
 		Type:          "contact",
@@ -90,19 +100,19 @@ func (cx *ChannelFlowXodo) Suport(p string) {
 		ContactName:   "STP CLUB",
 	}
 	_, _ = cx.xodo.SendMessage(&simpleMessage)
-
 }
 
-func (cx *ChannelFlowXodo) workers() int {
+func (cx *ChannelMkt) workers() int {
 	numWorkersStr := os.Getenv("NUMBER_WORKERS")
 	numWorkers, err := strconv.Atoi(numWorkersStr)
 	if err != nil || numWorkers <= 0 {
 		numWorkers = 1
 	}
+
 	return numWorkers
 }
 
-func (cx *ChannelFlowXodo) sendSimpleMessage(to, msg string) {
+func (cx *ChannelMkt) messageTxt(to, msg string) {
 	simpleMessage := dto.InputMessage{Message: msg, To: to, Type: "text"}
 	_, _ = cx.xodo.SendMessage(&simpleMessage)
 }
