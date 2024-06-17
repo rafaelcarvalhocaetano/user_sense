@@ -20,6 +20,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Install App Engine Go component
+        run: sudo apt-get install google-cloud-cli-app-engine-go
 #      - uses: google-github-actions/setup-gcloud@v0.2.0
 #        with:
 #          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
