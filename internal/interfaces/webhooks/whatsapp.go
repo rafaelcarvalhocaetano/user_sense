@@ -41,11 +41,11 @@ func (wt *Whatsapp) messages(w http.ResponseWriter, r *http.Request, dataChan ch
 		return
 	}
 
-	_, _ = pp.Println(input)
-
 	go func() {
 		dataChan <- input
 	}()
+
+	_, _ = pp.Println(input)
 
 }
 

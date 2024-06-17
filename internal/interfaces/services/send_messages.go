@@ -38,7 +38,6 @@ func (meta *SendMessage) Send(p string, data any) (*string, error) {
 		return nil, err
 	}
 
-	fmt.Println("json: ", string(jsonValue))
 	payload := map[string]interface{}{
 		"data": jsonValue,
 		"path": p,
@@ -83,7 +82,6 @@ func (meta *SendMessage) Send(p string, data any) (*string, error) {
 
 	payload["data"] = response
 	meta.logger.Debug("dispatcher", payload, http.StatusBadRequest)
-	fmt.Println("\n\n response: ", response)
 
 	_, _ = pp.Println(response)
 	id, _ := extractID(response)

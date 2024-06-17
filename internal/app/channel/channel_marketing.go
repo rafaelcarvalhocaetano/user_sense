@@ -77,9 +77,8 @@ func (cx *ChannelMkt) Flow(messages <-chan *dto2.ChannelDTO, statuses <-chan mod
 
 func (cx *ChannelMkt) messageEnded(p string) {
 	image := "https://github.com/rafaelcarvalhocaetano/meetup/blob/master/seja.png?raw=true"
-	insta := "https://www.instagram.com/reel/C4tBLGeuON2/?igsh=YW5ta3MxMDFjczF1"
 	suport := "\n\nSe preferir, entre em contato com nosso suporte:"
-	msg := "Obrigado por nos avaliar! Visite-nos novamente em:\n\n " + insta + suport
+	msg := "Obrigado por nos avaliar!\n\nVisite-nos em: https://www.instagram.com/reel/C4tBLGeuON2/?igsh=YW5ta3MxMDFjczF1" + suport
 	simpleMessage := dto.InputMessage{
 		To:      p,
 		Type:    "image",

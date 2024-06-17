@@ -3,7 +3,6 @@ package drivers
 import (
 	"botwhatsapp/util"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -24,11 +23,11 @@ func (cw *Cloudwatch) CommonCloudwatchZapCore(streamName string, level zapcore.L
 		return lvl == level
 	})
 
-	awsKey := os.Getenv("AWS_ACCESS_KEY_ID")
-	awsSecretKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
-
-	awsCred := credentials.NewStaticCredentials(awsKey, awsSecretKey, "")
-	awsCfg := aws.NewConfig().WithRegion("us-east-1").WithCredentials(awsCred)
+	//awsKey := os.Getenv("AWS_ACCESS_KEY_ID")
+	//awsSecretKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
+	//awsCred := credentials.NewStaticCredentials(awsKey, awsSecretKey, "")
+	//awsCfg := aws.NewConfig().WithRegion("us-east-1").WithCredentials(awsCred)
+	awsCfg := aws.NewConfig().WithRegion("us-east-1").WithCredentials(nil)
 	enc := zapcore.NewJSONEncoder(zapcore.EncoderConfig{
 		TimeKey:        "timestamp",
 		LevelKey:       "level",
