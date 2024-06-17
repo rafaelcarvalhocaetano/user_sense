@@ -31,6 +31,7 @@ func NewServer(handlers chi.Router) {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	log.Println("deepboot run in: http://localhost" + server.Addr)
+	url := os.Getenv("ENDPOINT")
+	log.Println(fmt.Sprintf("xodo run in: %v" + url))
 	log.Fatal(server.ListenAndServe())
 }

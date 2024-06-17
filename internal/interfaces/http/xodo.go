@@ -57,7 +57,7 @@ func (ctl *XodoHttp) messageHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (xd *XodoHttp) Handlers(r chi.Router) *XodoHttp {
-	r.Route("/v1/xodo", func(r chi.Router) {
+	r.Route("/xodo", func(r chi.Router) {
 		r.Post("/rate", xd.rateHandler)
 		r.Post("/message", xd.rateHandler)
 	})

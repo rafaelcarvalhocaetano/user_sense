@@ -4,9 +4,3 @@ runtime: go122
 #handlers:
 #- url: /.*
 #  script: botwhatsapp
-
-env_variables:
-  META_TOKEN: ""
-  META_URL: ""
-  META_PHONE_ID: ""
-  META_WBA_ID: ""

@@ -52,6 +52,7 @@ func (meta *SendMessage) Send(p string, data any) (*string, error) {
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
+	req.Header.Set("x-google-allow", "all")
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", meta.token))
 	req.ContentLength = int64(len(jsonValue))
 
