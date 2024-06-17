@@ -29,15 +29,19 @@ buttons: Avalie o abastecimento
 
 ```txt
 
--  gcloud projects list
--  gcloud config set project PROJECT_ID
 
 - Na raiz do projeto precisa ter um app.yaml
 - Dentro do projeto execute os comandos
+- O projeto só roda na porta 8080
+
+-  gcloud projects list
+-  gcloud config set project PROJECT_ID
 
 1 - gcloud auth application-default xodo-message (xodo-message é um project existente na GCP)
 2 - gcloud auth application-default login
 3 - gcloud app deploy
+4 - gcloud app browser
+5 - gcloud app logs tail -s default
 
 ```
 
