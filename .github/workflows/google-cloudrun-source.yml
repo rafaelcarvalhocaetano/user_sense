@@ -26,4 +26,3 @@ jobs:
       - name: Deploy to Google App Engine
         run: |
           gcloud app deploy --quiet --project=${{ env.PROJECT_ID }}
-
