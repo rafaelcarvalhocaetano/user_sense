@@ -25,7 +25,9 @@ jobs:
       - name: Enable App Engine API
         run: gcloud services enable appengine.googleapis.com
 
-      - name: Deploy to Google App Engine
-        run: |
-          gcloud app deploy --quiet --project=${{ env.PROJECT_ID }}
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.5.1
+        with:
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
