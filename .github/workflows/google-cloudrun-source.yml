@@ -1,49 +1,31 @@
-name: Deploy to Cloud Run from Source
+name: Deploy to Google App Engine
 
 on:
   push:
     branches: [ "master" ]
 
 env:
-  PROJECT_ID: gcr.io/${{ secrets.GCP_PROJECT_ID }}/site:latest
-#  SERVICE: YOUR_SERVICE_NAME # TODO: update Cloud Run service name
-#  REGION: YOUR_SERVICE_REGION # TODO: update Cloud Run service region
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  SERVICE_ACCOUNT: ${{ secrets.GCP_CREDENTIALS }}
 
 jobs:
   deploy:
-    strategy:
-      matrix:
-        go_version: [ '1.22' ]
-
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ matrix.go_version}}
 
-      - name: Checkout
+    steps:
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: |
-          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-          sudo apt-get install -y apt-transport-https ca-certificates gnupg
-          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-          sudo apt-get update && sudo apt-get install -y google-cloud-sdk-app-engine-go
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ env.SERVICE_ACCOUNT }}
+          project_id: ${{ env.PROJECT_ID }}
 
       - name: Enable App Engine API
-        run: |
-          gcloud services enable appengine.googleapis.com
+        run: gcloud services enable appengine.googleapis.com
 
       - name: Deploy to Google App Engine
-        uses: claudiuri/deploy-gae-action@master
-        with:
-          service-account:  ${{ secrets.GCP_CREDENTIALS }}
-          project-id: ${{ secrets.GCP_PROJECT_ID }}
-          
+        run: |
+          gcloud app deploy --quiet --project=${{ env.PROJECT_ID }}
+
