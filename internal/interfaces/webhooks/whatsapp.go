@@ -7,6 +7,7 @@ import (
 	"botwhatsapp/internal/pkg/response"
 	"botwhatsapp/util"
 	"github.com/go-chi/chi/v5"
+	"github.com/k0kubun/pp/v3"
 	"net/http"
 )
 
@@ -39,6 +40,8 @@ func (wt *Whatsapp) messages(w http.ResponseWriter, r *http.Request, dataChan ch
 		_, _ = w.Write([]byte(err.Error()))
 		return
 	}
+
+	_, _ = pp.Println(input)
 
 	go func() {
 		dataChan <- input

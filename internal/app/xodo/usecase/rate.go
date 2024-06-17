@@ -10,11 +10,11 @@ type objectData map[string]interface{}
 
 type Rate struct {
 	gateway services.WAGateway
-	x       chan model.Channel
+	channel chan model.Channel
 }
 
-func NewRate(gateway services.WAGateway, x chan model.Channel) *Rate {
-	return &Rate{gateway: gateway, x: x}
+func NewRate(gateway services.WAGateway, ch chan model.Channel) *Rate {
+	return &Rate{gateway: gateway, channel: ch}
 }
 
 func (r *Rate) Rate(input dto.InputRate) (*string, error) {
@@ -26,7 +26,7 @@ func (r *Rate) Rate(input dto.InputRate) (*string, error) {
 		"to":                input.PhoneNumber,
 		"type":              "template",
 		"template": objectData{
-			"name":     "xodo_flow",
+			"name":     "xodo_rate",
 			"language": map[string]string{"code": "pt_BR"},
 			"components": []objectData{
 				{
@@ -49,10 +49,7 @@ func (r *Rate) Rate(input dto.InputRate) (*string, error) {
 		return nil, err
 	}
 
-	r.x <- model.Channel{
-		PhoneNumber: input.PhoneNumber,
-		Status:      true,
-	}
+	r.channel <- model.Channel{PhoneNumber: input.PhoneNumber, Status: true}
 
 	return respID, nil
 }

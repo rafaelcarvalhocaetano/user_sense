@@ -5,6 +5,7 @@ import (
 	xodo2 "botwhatsapp/internal/app/xodo"
 	"botwhatsapp/internal/app/xodo/dto"
 	"botwhatsapp/internal/interfaces/webhooks/model"
+	"fmt"
 	"os"
 	"strconv"
 	"sync"
@@ -25,15 +26,12 @@ func (cx *ChannelMkt) Flow(messages <-chan *dto2.ChannelDTO, statuses <-chan mod
 
 	processMap := make(map[string]map[string]string)
 
-	//go func() {
-	//	defer wg.Done()
-	//	for s := range statuses {
-	//		//_, _ = pp.Println(s)
-	//		if s.Status == "sent" {
-	//			processMap[*s.RecipientID] = map[string]string{"step": "continue"}
-	//		}
-	//	}
-	//}()
+	go func() {
+		defer wg.Done()
+		for s := range statuses {
+			fmt.Println("statuses", s)
+		}
+	}()
 
 	go func() {
 		defer wg.Done()
@@ -47,7 +45,6 @@ func (cx *ChannelMkt) Flow(messages <-chan *dto2.ChannelDTO, statuses <-chan mod
 	go func() {
 		defer wg.Done()
 		for m := range messages {
-
 			processor, ok := processMap[m.UserPhone]
 			if processor["step"] == "stop" || !ok {
 				simpleMessage := dto.InputMessage{
