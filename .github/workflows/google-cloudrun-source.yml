@@ -17,17 +17,15 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0.5.1
         with:
           service_account_key: ${{ env.SERVICE_ACCOUNT }}
           project_id: ${{ env.PROJECT_ID }}
 
-      - name: Enable App Engine API
-        run: gcloud services enable appengine.googleapis.com
+      - name: Enable Cloud Run API
+        run: gcloud services enable run.googleapis.com
 
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0.5.1
-        with:
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-
+      - name: Build and Deploy to Cloud Run
+        run: |
+          gcloud builds submit --tag gcr.io/${PROJECT_ID}/your-service-name
+          gcloud run deploy your-service-name --image gcr.io/${PROJECT_ID}/your-service-name --platform managed --region us-central1 --allow-unauthenticated
