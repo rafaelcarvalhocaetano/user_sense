@@ -1,21 +1,20 @@
 package main
 
 import (
+	"botwhatsapp/internal/app/channel"
 	"botwhatsapp/internal/app/channel/dto"
 	"botwhatsapp/internal/app/xodo"
+	"botwhatsapp/internal/infra/drivers"
 	"botwhatsapp/internal/interfaces/http"
+	"botwhatsapp/internal/interfaces/services"
 	"botwhatsapp/internal/interfaces/web"
+	"botwhatsapp/internal/interfaces/webhooks"
+	"botwhatsapp/internal/interfaces/webhooks/model"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/lib/pq"
-
-	"botwhatsapp/internal/app/channel"
-	"botwhatsapp/internal/infra/drivers"
-	"botwhatsapp/internal/interfaces/services"
-	"botwhatsapp/internal/interfaces/webhooks"
-	"botwhatsapp/internal/interfaces/webhooks/model"
 )
 
 func main() {
@@ -41,7 +40,6 @@ func main() {
 
 	// TODO: service httpClient
 	sendMessages := services.NewSendMessage(logDriver)
-
 	httpGatway := services.WAGateway{SendMessagesHttp: sendMessages}
 
 	// TODO: Xodo
@@ -56,4 +54,5 @@ func main() {
 
 	// TODO: web-server
 	web.NewServer(r)
+	//appengine.Main()
 }

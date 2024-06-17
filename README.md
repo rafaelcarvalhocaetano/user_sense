@@ -23,3 +23,33 @@ buttons: Avalie o abastecimento
     
     <https://www.instagram.com/reel/C4tBLGeuON2/?igsh=YW5ta3MxMDFjczF1>
 ```
+
+## STEP
+
+
+```txt
+
+-  gcloud projects list
+-  gcloud config set project PROJECT_ID
+
+- Na raiz do projeto precisa ter um app.yaml
+- Dentro do projeto execute os comandos
+
+1 - gcloud auth application-default xodo-message (xodo-message é um project existente na GCP)
+2 - gcloud auth application-default login
+3 - gcloud app deploy
+
+```
+
+
+```txt
+
+descriptor:                  [/home/rafael/github/wa_xodo/app.yaml]
+source:                      [/home/rafael/github/wa_xodo]
+target project:              [xodo-message]
+target service:              [default]
+target version:              [20240616t215423]
+target url:                  [https://xodo-message.uc.r.appspot.com]
+target service account:      [xodo-message@appspot.gserviceaccount.com]
+
+```
