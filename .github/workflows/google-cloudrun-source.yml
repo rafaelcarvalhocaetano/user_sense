@@ -1,12 +1,13 @@
-name: Deploy to Cloud Run from Source
+name: Deploy to Google App Engine
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - master
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  SERVICE_ACCOUNT: ${{ secrets.GCP_CREDENTIALS }}
+  SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_CREDENTIALS }}
 
 jobs:
   deploy:
@@ -19,13 +20,10 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v0.5.1
         with:
-          service_account_key: ${{ env.SERVICE_ACCOUNT }}
+          service_account_key: ${{ env.SERVICE_ACCOUNT_KEY }}
           project_id: ${{ env.PROJECT_ID }}
 
-      - name: Enable Cloud Run API
-        run: gcloud services enable run.googleapis.com
-
-      - name: Build and Deploy to Cloud Run
+      - name: Deploy to Google App Engine
         run: |
-          gcloud builds submit --tag gcr.io/${PROJECT_ID}/your-service-name
-          gcloud run deploy your-service-name --image gcr.io/${PROJECT_ID}/your-service-name --platform managed --region us-central1 --allow-unauthenticated
+          gcloud app deploy --quiet --project=${{ env.PROJECT_ID }}
+
