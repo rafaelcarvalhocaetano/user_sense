@@ -36,10 +36,10 @@ jobs:
           sudo apt-get install -y apt-transport-https ca-certificates gnupg
           curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
           sudo apt-get update && sudo apt-get install -y google-cloud-sdk-app-engine-go
-#      - uses: google-github-actions/setup-gcloud@v0.2.0
-#        with:
-#          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-#          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Enable App Engine API
+        run: |
+          gcloud services enable appengine.googleapis.com
 
       - name: Deploy to Google App Engine
         uses: claudiuri/deploy-gae-action@master
