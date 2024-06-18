@@ -15,7 +15,7 @@ type Server struct {
 
 func NewServer(handlers chi.Router) {
 
-	handlers.Get("/", func(w http.ResponseWriter, r *http.Request) {
+	handlers.Get("/xodo/healthcheck", func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte("<h1>welcome to the deepbot</h1>"))
 		if err != nil {
 			return

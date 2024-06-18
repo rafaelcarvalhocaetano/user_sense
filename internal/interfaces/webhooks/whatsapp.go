@@ -7,7 +7,7 @@ import (
 	"botwhatsapp/internal/pkg/response"
 	"botwhatsapp/util"
 	"github.com/go-chi/chi/v5"
-	"github.com/k0kubun/pp/v3"
+	"io"
 	"net/http"
 )
 
@@ -34,18 +34,14 @@ func (wt *Whatsapp) webhookAuthentication(w http.ResponseWriter, r *http.Request
 }
 
 func (wt *Whatsapp) messages(w http.ResponseWriter, r *http.Request, dataChan chan<- *model.WebhookData) {
-	input, err := util.ToStruct[model.WebhookData](r.Body)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		_, _ = w.Write([]byte(err.Error()))
-		return
-	}
+	input, _ := util.ToStruct[model.WebhookData](r.Body)
 
 	go func() {
 		dataChan <- input
 	}()
 
-	_, _ = pp.Println(input)
+	body, _ := io.ReadAll(r.Body)
+	wt.log.Debug("webhook", body, http.StatusOK)
 
 }
 
