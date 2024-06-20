@@ -26,7 +26,7 @@ func (r *Rate) Rate(input dto.InputRate) (*string, error) {
 		"to":                input.PhoneNumber,
 		"type":              "template",
 		"template": objectData{
-			"name":     "xodo_rate",
+			"name":     "xxodo_rate",
 			"language": map[string]string{"code": "pt_BR"},
 			"components": []objectData{
 				{

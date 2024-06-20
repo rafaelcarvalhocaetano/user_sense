@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/joho/godotenv/autoload"
-	"github.com/k0kubun/pp/v3"
 	"io"
 	"net/http"
 	"os"
@@ -84,7 +83,7 @@ func (meta *SendMessage) Send(p string, data any) (*string, error) {
 	payload["data"] = response
 	meta.logger.Debug("dispatcher", payload, http.StatusBadRequest)
 
-	_, _ = pp.Println(response)
+	//_, _ = pp.Println(response)
 	id, _ := extractID(response)
 
 	return &id, nil
