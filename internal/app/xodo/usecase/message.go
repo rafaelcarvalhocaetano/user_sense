@@ -36,6 +36,7 @@ func (msg *Message) SendMessage(data *dto.InputMessage) (*dto.OutputMessage, err
 	if data.Type == "image" {
 		payload["type"] = "image"
 		payload["preview_url"] = true
+		payload["context"] = map[string]interface{}{"message_id": data.MessageID}
 		payload["image"] = map[string]interface{}{
 			"link":    data.Link,
 			"caption": data.Caption,

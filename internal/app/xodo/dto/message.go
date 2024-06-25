@@ -12,4 +12,5 @@ type InputMessage struct {
 	Type          string `json:"type"`
 	Caption       string `json:"caption,omitempty"`
 	Link          string `json:"link,omitempty"`
+	MessageID     string `json:"message_id,omitempty"`
 }

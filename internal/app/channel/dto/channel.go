@@ -7,5 +7,6 @@ type ChannelDTO struct {
 	UserName  string
 	Payload   string
 	MetaID    string
+	MessageID string
 	Message   model.Value
 }

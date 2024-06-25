@@ -59,7 +59,7 @@ func (cx *ChannelMkt) Flow(messages <-chan *dto2.ChannelDTO, statuses <-chan mod
 			if processor["step"] == "continue" {
 				switch m.Payload {
 				case "1", "2", "3", "4", "5":
-					cx.messageEnded(m.UserPhone)
+					cx.messageEnded(m.MessageID, m.UserPhone)
 					time.Sleep(time.Second * 1)
 					cx.suport(m.UserPhone)
 					processor["step"] = "stop"
@@ -74,15 +74,17 @@ func (cx *ChannelMkt) Flow(messages <-chan *dto2.ChannelDTO, statuses <-chan mod
 	go func() { wg.Wait() }()
 }
 
-func (cx *ChannelMkt) messageEnded(p string) {
+func (cx *ChannelMkt) messageEnded(msgID, p string) {
 	image := "https://github.com/rafaelcarvalhocaetano/meetup/blob/master/seja.png?raw=true"
 	suport := "\n\nSe preferir, entre em contato com nosso suporte:"
 	msg := "Obrigado por nos avaliar!\n\nVisite-nos em: https://www.instagram.com/reel/C4tBLGeuON2/?igsh=YW5ta3MxMDFjczF1" + suport
+
 	simpleMessage := dto.InputMessage{
-		To:      p,
-		Type:    "image",
-		Link:    image,
-		Caption: msg,
+		To:        p,
+		Type:      "image",
+		Link:      image,
+		Caption:   msg,
+		MessageID: msgID,
 	}
 	_, _ = cx.xodo.SendMessage(&simpleMessage)
 }

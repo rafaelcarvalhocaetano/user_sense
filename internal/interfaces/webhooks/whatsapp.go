@@ -8,6 +8,7 @@ import (
 	"botwhatsapp/util"
 	"github.com/go-chi/chi/v5"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -40,7 +41,10 @@ func (wt *Whatsapp) messages(w http.ResponseWriter, r *http.Request, dataChan ch
 		dataChan <- input
 	}()
 
+	//_, _ = pp.Println(input)
+
 	body, _ := io.ReadAll(r.Body)
+	log.Println(string(body))
 	wt.log.Debug("webhook", body, http.StatusOK)
 
 }

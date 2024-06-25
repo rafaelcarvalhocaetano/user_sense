@@ -54,6 +54,7 @@ func (cm *MessageChannel) Main(webhook <-chan *model.WebhookData, send chan<- *d
 				if len(messages) > 0 {
 					message := change.Value.Messages[0]
 					dataChannel.Message = *change.Value
+					dataChannel.MessageID = message.ID
 					switch message.Type {
 					case "text":
 						dataChannel.Payload = message.Text.Body
