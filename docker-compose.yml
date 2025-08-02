@@ -4,17 +4,13 @@ services:
   # app:
   #   build: .
   #   container_name: go_app
+  #   env_file:
+  #     - .env
   #   environment:
-  #     DB_HOST: postgres
-  #     DB_PORT: 5432
-  #     DB_USER: postgres
-  #     DB_PASSWORD: postgres
-  #     DB_NAME: app_db
-  #     DB_SSL_MODE: disable
-  #     TYPESENSE_HOST: typesense
-  #     TYPESENSE_PORT: 8108
-  #     TYPESENSE_API_KEY: xyz
-  #     SERVER_PORT: 8080
+  #     DATABASE_URL: ${DATABASE_URL}
+  #     TYPESENSE_HOST: ${TYPESENSE_HOST}
+  #     TYPESENSE_API_KEY: ${TYPESENSE_API_KEY}
+  #     SERVER_PORT: ${SERVER_PORT}
   #   ports:
   #     - "8080:8080"
   #   depends_on:
@@ -22,14 +18,16 @@ services:
   #     - typesense
   #   networks:
   #     - app_network
-  #
+  
   # postgres:
   #   image: postgres:16
   #   container_name: postgres_db
+  #   env_file:
+  #     - .env
   #   environment:
-  #     POSTGRES_USER: postgres
+  #     POSTGRES_USER: root
   #     POSTGRES_PASSWORD: postgres
-  #     POSTGRES_DB: app_db
+  #     POSTGRES_DB: ex_typesense
   #   ports:
   #     - "5432:5432"
   #   volumes:
@@ -40,14 +38,16 @@ services:
   typesense:
     image: typesense/typesense:0.25.2
     container_name: typesense_search
+    env_file:
+      - .env
     environment:
       TYPESENSE_DATA_DIR: /data
-      TYPESENSE_API_KEY: xyz
+      TYPESENSE_API_KEY: ${TYPESENSE_API_KEY}
     ports:
       - "8108:8108"
     volumes:
       - typesense_data:/data
-    command: '--data-dir /data --api-key=xyz --listen-port 8108 --enable-cors'
+    command: '--data-dir /data --api-key=${TYPESENSE_API_KEY} --listen-port 8108 --enable-cors'
 
 volumes:
   typesense_data:
