@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"net/http"
+
 	"go-typesense-app/internal/handlers"
 
 	"github.com/go-chi/chi/v5"
@@ -24,6 +26,10 @@ func SetupRoutes(userHandler handlers.UserHandlerInterface, handler handlers.Sna
 		AllowCredentials: false,
 		MaxAge:           300,
 	}))
+
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		_, _ = w.Write([]byte("Welcome to the USER-SENSE app api!"))
+	})
 
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Route("/users", func(r chi.Router) {

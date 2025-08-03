@@ -26,11 +26,11 @@ type ServerConfig struct {
 func Load() *Config {
 	return &Config{
 		Database: DatabaseConfig{
-			DatabaseURL: getEnv("DATABASE_URL", "postgres://root:postgres@localhost:5432/ex_typesense?sslmode=disable"),
+			DatabaseURL: getEnv("DATABASE_URL", "postgres://root:postgres@postgres-sfs:5432/user-sense?sslmode=disable"),
 		},
 		Typesense: TypesenseConfig{
-			Host:   getEnv("TYPESENSE_HOST", "http://localhost:8108"),
-			APIKey: getEnv("TYPESENSE_API_KEY", "xyz"),
+			Host:   getEnv("TYPESENSE_HOST", "http://typesense-sfs:8108"),
+			APIKey: getEnv("TYPESENSE_API_KEY", "xpto"),
 		},
 		Server: ServerConfig{
 			Port: getEnv("SERVER_PORT", "8080"),

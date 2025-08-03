@@ -1,7 +1,9 @@
 package search
 
 import (
+	"context"
 	"log"
+	"time"
 
 	"go-typesense-app/internal/models"
 
@@ -48,7 +50,10 @@ func (t *UserSearchServiceImpl) CreateUserCollection() error {
 		},
 	}
 
-	_, err := t.sense.Client.Collections().Create(schema)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := t.sense.Client.Collections().Create(ctx, schema)
 	if err != nil {
 		if err.Error() == "status: 409 response: {\"message\": \"A collection with name `users` already exists.\"}" {
 			log.Println("Users collection already exists, skipping creation")
@@ -71,12 +76,16 @@ func (t *UserSearchServiceImpl) IndexUser(user *models.User) error {
 		City:  user.City,
 	}
 
-	_, err := t.sense.Client.Collection("users").Documents().Upsert(document)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	_, err := t.sense.Client.Collection("users").Documents().Upsert(ctx, document)
 	return err
 }
 
 func (t *UserSearchServiceImpl) DeleteUser(userID uuid.UUID) error {
-	_, err := t.sense.Client.Collection("users").Document(userID.String()).Delete()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	_, err := t.sense.Client.Collection("users").Document(userID.String()).Delete(ctx)
 	return err
 }
 
@@ -90,7 +99,10 @@ func (t *UserSearchServiceImpl) SearchUsers(query string) ([]models.UserSearchDo
 		PerPage: &perPage,
 	}
 
-	result, err := t.sense.Client.Collection("users").Documents().Search(searchParams)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	result, err := t.sense.Client.Collection("users").Documents().Search(ctx, searchParams)
 	if err != nil {
 		return nil, err
 	}

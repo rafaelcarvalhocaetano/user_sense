@@ -76,3 +76,7 @@ db_snapshot/
 ```bash
 tar -czf typesense_backup_$(date +%Y%m%d_%H%M%S).tar.gz -C /backups db_snapshot/
 ```
+
+```bash
+kind create cluster --config ./k8s/kind-config.yaml
+```

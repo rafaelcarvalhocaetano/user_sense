@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: typesense
+  labels:
+    app: typesense
+spec:
+  serviceName: typesense-sfs
+  replicas: 1
+  selector:
+    matchLabels:
+      app: typesense
+  volumeClaimTemplates:
+    - metadata:
+        name: typesense-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+  template:
+    metadata:
+      labels:
+        app: typesense
+    spec:
+      containers:
+        - name: typesense
+          image: typesense/typesense:0.25.2
+          ports:
+            - containerPort: 8108
+          env:
+            - name: TYPESENSE_DATA_DIR
+              value: /data
+            - name: TYPESENSE_HOST
+              value: "0.0.0.0"
+            - name: TYPESENSE_API_KEY
+              value: "xpto"
+          command:
+            - typesense-server
+            - --data-dir=/data
+            - --api-key=${TYPESENSE_API_KEY}
+            - --listen-port=8108
+            - --enable-cors
+          volumeMounts:
+            - mountPath: /data
+              name: typesense-storage
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: typesense-sfs
+spec:
+  clusterIP: None
+  selector:
+    app: typesense
+  ports:
+    - port: 8108
+      targetPort: 8108

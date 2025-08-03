@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-sense-env
+data:
+  .env: |
+    DATABASE_URL="postgres://root:postgres@postgres-sfs:5432/user-sense?sslmode=disable"
+    TYPESENSE_HOST="http://typesense-sfs:8108"
+    TYPESENSE_API_KEY="xpto"
+    SERVER_PORT="8080"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-sense
+spec:
+  selector:
+    matchLabels:
+      app: user-sense
+  template:
+    metadata:
+      labels:
+        app: user-sense
+    spec:
+      containers:
+        - name: user-sense
+          image: rafaelcarvalhocaetano/user-sense:latest
+          ports:
+            - containerPort: 8080
+              name: http
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: env-volume
+              mountPath: /app/.env
+              subPath: .env
+          resources:
+            requests:
+              cpu: 64m
+              memory: 64Mi
+            limits:
+              cpu: 128m
+              memory: 128Mi
+      volumes:
+        - name: env-volume
+          configMap:
+            name: user-sense-env
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-sense
+spec:
+  selector:
+    app: user-sense
+  ports:
+    - port: 8080
+      targetPort: 8081

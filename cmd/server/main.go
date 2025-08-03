@@ -18,7 +18,7 @@ import (
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		log.Printf("Warning: .env file not found: %v", err)
+		panic(err)
 	}
 
 	cfg := config.Load()
@@ -39,7 +39,7 @@ func main() {
 	userModule := users.NewUserModule(userRepositoryImpl, searchClient)
 
 	if err := userModule.InitializeSearchCollection(); err != nil {
-		log.Printf("Warning: Failed to create Typesense collection: %v", err)
+		log.Printf("Error initializing user search collection: %v", err)
 	}
 
 	userHandler := handlers.NewUserHandler(userModule)
@@ -56,6 +56,6 @@ func main() {
 	}
 
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		log.Fatal("Server failed to start:", err)
+		log.Fatalf("Error starting server: %v", err)
 	}
 }

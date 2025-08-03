@@ -46,3 +46,40 @@ tasks:
       - docker cp typesense_search:/tmp/typesense_backup-$(date +%d-%m-%Y).tar.gz ./backups/
       - docker exec typesense_search rm /tmp/typesense_backup-$(date +%d-%m-%Y).tar.gz
       - echo "Backup copied to ./backups/ directory"
+      
+  hub:
+    desc: Build and push Docker image to Docker Hub
+    cmds:
+#      - docker login
+      - docker build -t rafaelcarvalhocaetano/user-sense:latest .
+      - docker push rafaelcarvalhocaetano/user-sense:latest
+
+  deploy-postgres:
+    desc: Apply the manifest for Typesense
+    cmds:
+      - kubectl apply -f ./k8s/postgres.yaml
+
+  deploy-typesense:
+    desc: Apply the manifest for Typesense
+    cmds:
+      - kubectl apply -f ./k8s/typesense.yaml
+
+  deploy-user-sense:
+    desc: Apply the manifest for api user-sense
+    cmds:
+      - kubectl apply -f ./k8s/user-sense.yaml
+  
+  k:
+    desc: Apply all Kubernetes manifests
+    deps:
+#      - hub
+      - deploy-postgres
+      - deploy-typesense
+      - deploy-user-sense
+
+  kd:
+    desc: Delete all Kubernetes resources
+    cmds:
+      - kubectl delete -f ./k8s/postgres.yaml
+      - kubectl delete -f ./k8s/typesense.yaml
+      - kubectl delete -f ./k8s/user-sense.yaml

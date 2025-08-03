@@ -1,5 +1,5 @@
 ### Variables
-@baseUrl = http://localhost:8080/api/v1
+@baseUrl = http://10.96.220.169:8080/api/v1
 @userCreateBody = {
   "name": "João Silva",
   "email": "joao.silva@example.com",
