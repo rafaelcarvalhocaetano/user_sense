@@ -36,9 +36,9 @@ spec:
             - name: TYPESENSE_API_KEY
               value: "xpto"
           command:
-            - typesense-server
+            - /opt/typesense-server
             - --data-dir=/data
-            - --api-key=${TYPESENSE_API_KEY}
+            - --api-key=xpto
             - --listen-port=8108
             - --enable-cors
           volumeMounts:
